@@ -6,69 +6,107 @@
 // La partita termina quando il giocatore inserisce un numero “vietato” o raggiunge il numero massimo possibile di numeri consentiti.
 // Al termine della partita il software deve comunicare il punteggio, cioè il numero di volte che l’utente ha inserito un numero consentito.
 
-// ci servono
+// ci servono:
 // FUNZIONI
 // funzione per generare numeri casuali
 // funzione che verifica la presenza di un elemento in un array
-function numberGenerator(min, max) {
-  var numeroRandom = parseInt(Math.floor(Math.random() * max) + min);
-  return numeroRandom;
-}
 
-function isInArray(array, element) {
-  var found = false;
-  for (var i = 0; i < array.length; i++) {
-    if(element == array[i]) {
-      found = true;
-    }
-  }
-  return found;
-}
 // VARIABILI
-// array di numeri casuali (bombe)
+// array di numeri casuali (bombs)
 // numero massimo di possibilità
 // array di tentativi
 // punteggio
 
+
+function randomIntegerBetween(min, max) {
+  return Math.floor(Math.random() * (max - min + 1) ) + min;
+}
+
+function isInArray(array, element) {
+  var found = false;
+
+  for (var i = 0; i < array.length; i++) {
+
+    if (element == array[i]) {
+      found = true;
+      return found;
+    }
+  }
+  return found;
+}
+
 var bombs = [];
-
-// var maxAttempts = 100 - 16;
-var maxAttempts = 5;
-
 var attempts = [];
 var score = 0;
+// BONUS
+var level;
+var maxNumber;
+level = prompt("scegli la difficoltà: 0,1,2");
+
+switch(level) {
+  case "2":
+    maxNumber = 50;
+  //valori compresi tra 1 e 50
+    break
+  case "1":
+    maxNumber = 80;
+  //valori compresi tra 1 e 80
+    break
+  default:
+  maxNumber = 100;
+  //valori compresi tra 1 e 100
+}
+maxAttempts = maxNumber - 16;
+// console.log(bombs.length);
+// for(var i = 0; i < 16; i++) {
+//   var randomNumber = randomIntegerBetween(1, 100);
+//   bombs.push(randomNumber);
+// }
+// console.log(bombs.length);
 
 // generazione bombe
-for (var i = 0; i < 16; i++) {
-  var numeroGenerato = numberGenerator(1,100);
-  bombs.push(numeroGenerato);
-}
-// /generazione bombe
+while(bombs.length < 16) {
+  var randomNumber = randomIntegerBetween(1, maxNumber);
+  // console.log("numero casuale generato: " , randomNumber);
+  var check = isInArray(bombs, randomNumber);
 
-// controllo duplicati
-while (i < bombs.lenght) {
-  var numeroGenerato = numberGenerator(1,100);
-  var check = isInArray(bombs,numeroGenerato)
-
-  if (check == false ) {
-    bombs.push(numeroGenerato);
+  if (check == false) {
+    bombs.push(randomNumber)
   }
+  // console.log(bombs.length);
 }
 console.log(bombs);
-// /controllo duplicati
+// /generazione bombe
 
-// gioco
+//gioco
 
-while (attempts.lenght < maxAttempts) {
-  var userNumber = parseInt(prompt("Inserisci numeri"));
-  console.log(userNumber);
-  var checkAttempts = isInArray(attempts,userNumber);
-  console.log(checkAttempts);
+// for (var i = 0; i < maxAttempts; i++) {
+//   var userNumber = parseInt(prompt("Inserisci un numero compreso tra 1 e 100"));
+//   attempts.push(userNumber);
+// }
 
-  if (checkAttempts == false ) {
+var lost = false;
+while (attempts.length < maxAttempts && lost == false) {
+  var userNumber = parseInt(prompt("Inserisci un numero compreso tra 1 e " + maxNumber));
+  // console.log(userNumber);
+  var checkAttempts = isInArray(attempts, userNumber);
+  console.log("Numero duplicato?" , checkAttempts);
+
+  var gameCheck = isInArray(bombs, userNumber);
+  console.log("Ho trovato una bomba?" , gameCheck)
+
+  if(gameCheck == true) {
+    alert("Hai perso")
+    lost = true;
+  } else if (checkAttempts == false) {
     attempts.push(userNumber);
+    score++;
+  } else {
+    alert("numero duplicato");
   }
 }
-console.log(attempts);
 
+score = attempts.length;
+alert("Punteggio:" + score);
+console.log(attempts);
 // /gioco
