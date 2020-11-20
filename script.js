@@ -6,28 +6,69 @@
 // La partita termina quando il giocatore inserisce un numero “vietato” o raggiunge il numero massimo possibile di numeri consentiti.
 // Al termine della partita il software deve comunicare il punteggio, cioè il numero di volte che l’utente ha inserito un numero consentito.
 
-var array_bombe = [];
-var i = 1;
-while (i <= 16) {
-  randomNumber();
-  array_bombe.push(numeroGenerato);
-  checkDubleNumbers();
-  console.log(numeroGenerato);
-  i++;
-}
-console.log(array_bombe);
-
-//------------------------------------------------------------------------------
-function randomNumber(nMin, nMax) {
-  numeroGenerato = parseInt(Math.floor(Math.random() * 17) + 1);
-  return numeroGenerato;
+// ci servono
+// FUNZIONI
+// funzione per generare numeri casuali
+// funzione che verifica la presenza di un elemento in un array
+function numberGenerator(min, max) {
+  var numeroRandom = parseInt(Math.floor(Math.random() * max) + min);
+  return numeroRandom;
 }
 
-function checkDubleNumbers() {
-  var result = false;
-  for (var i = 0; i < array_bombe.length; i++) {
-    if (numeroGenerato == array_bombe[i]) {
-      result = true;
+function isInArray(array, element) {
+  var found = false;
+  for (var i = 0; i < array.length; i++) {
+    if(element == array[i]) {
+      found = true;
     }
   }
+  return found;
 }
+// VARIABILI
+// array di numeri casuali (bombe)
+// numero massimo di possibilità
+// array di tentativi
+// punteggio
+
+var bombs = [];
+
+// var maxAttempts = 100 - 16;
+var maxAttempts = 5;
+
+var attempts = [];
+var score = 0;
+
+// generazione bombe
+for (var i = 0; i < 16; i++) {
+  var numeroGenerato = numberGenerator(1,100);
+  bombs.push(numeroGenerato);
+}
+// /generazione bombe
+
+// controllo duplicati
+while (i < bombs.lenght) {
+  var numeroGenerato = numberGenerator(1,100);
+  var check = isInArray(bombs,numeroGenerato)
+
+  if (check == false ) {
+    bombs.push(numeroGenerato);
+  }
+}
+console.log(bombs);
+// /controllo duplicati
+
+// gioco
+
+while (attempts.lenght < maxAttempts) {
+  var userNumber = parseInt(prompt("Inserisci numeri"));
+  console.log(userNumber);
+  var checkAttempts = isInArray(attempts,userNumber);
+  console.log(checkAttempts);
+
+  if (checkAttempts == false ) {
+    attempts.push(userNumber);
+  }
+}
+console.log(attempts);
+
+// /gioco
